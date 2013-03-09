@@ -1,41 +1,18 @@
-import serial
-import time
-import multiprocessing
 
-class SerialProcess(multiprocessing.Process):
+from ws4py.client.threadedclient import WebSocketClient
 
-    def __init__(self, taskQ, resultQ):
-        multiprocessing.Process.__init__(self)
-        self.taskQ = taskQ
-        self.resultQ = resultQ
-        self.usbPort = '/dev/ttyACM0'
-        self.sp = serial.Serial(self.usbPort, 115200, timeout=1)
+class EchoClient(WebSocketClient):
+     def opened(self):
+         print "Connection opened..."
 
-    def close(self):
-        self.sp.close()
+     def closed(self, code, reason=None):
+         print code, reason
 
-    def sendData(self, data):
-        print "sendData start..."
-        self.sp.write(data)
-        time.sleep(3)
-        print "sendData done: " + data
+     def received_message(self, m):
+         self.send(m)
 
-    def run(self):
-
-    	self.sp.flushInput()
-
-        while True:
-            # look for incoming tornado request
-            if not self.taskQ.empty():
-                task = self.taskQ.get()
-
-                # send it to the arduino
-                self.sp.write(task + "\n");
-                print "arduino received from tornado: " + task
-
-            # look for incoming serial data
-            if (self.sp.inWaiting() > 0):
-            	result = self.sp.readline().replace("\n", "")
-
-                # send it back to tornado
-            	self.resultQ.put(result)
+try:
+    ws = EchoClient('ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws')
+    ws.connect()
+except KeyboardInterrupt:
+    ws.close()

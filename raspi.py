@@ -18,3 +18,5 @@ try:
 except KeyboardInterrupt:
     ws.close()
 
+while True:
+    pass

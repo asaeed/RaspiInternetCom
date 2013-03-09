@@ -13,7 +13,7 @@ class RaspiClient(WebSocketClient):
         print "Received from server: %s" % (str(m))
 
 try:
-    ws = EchoClient('ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws')
+    ws = RaspiClient('ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws')
     ws.connect()
 except KeyboardInterrupt:
     ws.close()

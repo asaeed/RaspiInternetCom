@@ -1,4 +1,5 @@
 
+import time
 from ws4py.client.threadedclient import WebSocketClient
 
 class RaspiClient(WebSocketClient):
@@ -19,4 +20,5 @@ except KeyboardInterrupt:
     ws.close()
 
 while True:
-    pass
+    time.sleep(4)
+    print strftime("%Y-%m-%d %H:%M:%S", gmtime())

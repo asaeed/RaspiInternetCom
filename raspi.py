@@ -23,3 +23,4 @@ except KeyboardInterrupt:
 while True:
     time.sleep(4)
     print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+    ws.send(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
